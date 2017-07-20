@@ -2,7 +2,7 @@ from django.db import models
 from modules.Authors.models import Author
 #from modules.Users.models import User
 from django.contrib.postgres.fields import ArrayField
-
+from django.conf import settings
 
 LIT_GENRE = (
     ("sf","science fiction"),
@@ -31,11 +31,17 @@ class Book(models.Model):
         size=5
     )
 
+    def __str__(self):
+        return "Libro: %s" % self.name
+
 class Comments(models.Model):
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     book = models.ForeignKey(Book,on_delete=models.CASCADE)
     comment = models.TextField()
+
+    def __str__(self):
+        return "Comment: %s to %s " % (self.user.name,self.book.name)
 
     
 

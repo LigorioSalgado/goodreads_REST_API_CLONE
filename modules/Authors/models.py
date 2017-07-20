@@ -19,3 +19,7 @@ class Author(models.Model):
     is_alive = models.BooleanField(default=True)
 
 
+    def __str__(self):
+        return "Autor: %s %s" % (self.name,self.last_name)
+
+

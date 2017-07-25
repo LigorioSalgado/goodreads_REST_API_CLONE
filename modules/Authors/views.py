@@ -5,15 +5,27 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from .models import Author
 from .serializers import AuthorSerializer,AuthorBookSerializer
-
+from django.db.models import Q
 #Clases bsadas en vistas o "Clased base views"
 
 class AuthorList(APIView):
 
     def get(self,request):
-        authors = Author.objects.all()
-        serializer = AuthorBookSerializer(authors,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        gender = request.query_params.get('gender')
+        is_alive = request.query_params.get('is_alive')
+        nationality = request.query_params.get('nationality')
+        if (gender or is_alive or nationality) is not None:
+            authors = Author.objects.filter(Q(gender__icontains=gender) |
+                Q(is_alive=bool(is_alive)) |
+                Q(nationality__icontains=nationality)
+            )
+            serializer = AuthorSerializer(authors,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+
+        else:
+            authors = Author.objects.all()
+            serializer = AuthorBookSerializer(authors,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
 
     
     def post(self,request):
@@ -57,3 +69,4 @@ class AuthorDetail(APIView):
         autor = get_object_or_404(Author,id=pk)
         autor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+

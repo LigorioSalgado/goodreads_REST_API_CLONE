@@ -9,7 +9,13 @@ from django.db.models import Q
 #Clases bsadas en vistas o "Clased base views"
 
 class AuthorList(APIView):
+    """
+    get:
+    Obtine todos los autores
 
+    post:
+    Crea un nuevo autor
+    """
     def get(self,request):
         gender = request.query_params.get('gender')
         is_alive = request.query_params.get('is_alive')

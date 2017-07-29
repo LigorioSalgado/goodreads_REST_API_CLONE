@@ -16,4 +16,5 @@ DATABASES = {
    }
 }
 
+
 STATIC_ROOT = os.path.join(os.getcwd(),'static')
